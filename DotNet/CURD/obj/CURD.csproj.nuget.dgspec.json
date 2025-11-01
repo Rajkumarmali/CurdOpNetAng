@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/rajkumarmali/DOTNETANGULAR/DotNet/CURD/CURD.csproj": {}
+    "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj": {}
   },
   "projects": {
-    "/Users/rajkumarmali/DOTNETANGULAR/DotNet/CURD/CURD.csproj": {
+    "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/rajkumarmali/DOTNETANGULAR/DotNet/CURD/CURD.csproj",
+        "projectUniqueName": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj",
         "projectName": "CURD",
-        "projectPath": "/Users/rajkumarmali/DOTNETANGULAR/DotNet/CURD/CURD.csproj",
+        "projectPath": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj",
         "packagesPath": "/Users/rajkumarmali/.nuget/packages/",
-        "outputPath": "/Users/rajkumarmali/DOTNETANGULAR/DotNet/CURD/obj/",
+        "outputPath": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/rajkumarmali/.nuget/NuGet/NuGet.Config"
@@ -43,9 +43,33 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.7, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.17, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.10, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.3, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
