@@ -1,7 +1,11 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using CURD.DTO;
 using CURD.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CURD.Controller
 {
@@ -11,9 +15,11 @@ namespace CURD.Controller
     {
 
         private readonly UserManager<AppUser> _userManager;
-        public AuthController(UserManager<AppUser> userManager)
+        private readonly IConfiguration _configuration;
+        public AuthController(UserManager<AppUser> userManager, IConfiguration congiguration)
         {
             _userManager = userManager;
+            _configuration = congiguration;
         }
         [HttpPost]
         public async Task<IActionResult> SignIn([FromBody] UserRegisterDto dto)
@@ -34,7 +40,22 @@ namespace CURD.Controller
             var user = await _userManager.FindByEmailAsync(email: dot.Email);
             if (user != null && await _userManager.CheckPasswordAsync(user, dot.Password))
             {
-                return Ok(new { user });
+                var signinkey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:JwtSecret"]));
+                var tokenDescription = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                  {
+                      new Claim("UserId",user.Id.ToString()),
+                      new Claim("Email",user.Email.ToString())
+                  }),
+                    Expires = DateTime.UtcNow.AddDays(1),
+                    SigningCredentials = new SigningCredentials(signinkey, SecurityAlgorithms.HmacSha256Signature)
+                };
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var securityToken = tokenHandler.CreateToken(tokenDescription);
+                var token = tokenHandler.WriteToken(securityToken);
+
+                return Ok(new { token });
             }
             return Ok("UserName or password are wrong");
         }
