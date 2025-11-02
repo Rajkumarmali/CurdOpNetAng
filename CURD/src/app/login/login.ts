@@ -17,11 +17,12 @@ export class Login {
       password:''
     }
 
-    onSubmit(){
+    onLogin(){
          this.authServices.logIn(this.user).subscribe({
-          next:(res)=>{
+          next:(res:any)=>{
             this.router.navigate(['dashboard'])
-            console.log(res)
+            localStorage.setItem('token',res.token);
+           // console.log(res)
           },error:(err)=>{
             console.log("Error",err);
           }

@@ -14,4 +14,7 @@ export class Auth {
    logIn(user:any){
       return this.http.post("http://localhost:5050/api/Auth/login",user);
    }
+   isLogin(){
+       return localStorage.getItem('token') != null? true:false;
+   }
 }
