@@ -7,7 +7,7 @@ namespace CURD.Data
     public class AppDbContext : IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-        DbSet<AppUser> AppUsers { get; set; }
-        DbSet<User> Users { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
+        public DbSet<Student> Students { get; set; }
     }
 }

@@ -1,0 +1,43 @@
+Dark transparent background overlay
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Centered popup form */
+.popup-form {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  background: #fff;
+  z-index: 20;
+  border-radius: 15px;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Smooth popup animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Make form responsive */
+@media (max-width: 768px) {
+  .popup-form {
+    width: 90%;
+  }
+}
