@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using CURD.DTO;
 using CURD.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,7 @@ namespace CURD.Controller
             _configuration = congiguration;
         }
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> SignIn([FromBody] UserRegisterDto dto)
         {
             var user = new AppUser
@@ -35,6 +37,7 @@ namespace CURD.Controller
             return Ok(new { result });
         }
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginDto dot)
         {
             var user = await _userManager.FindByEmailAsync(email: dot.Email);
@@ -58,6 +61,15 @@ namespace CURD.Controller
                 return Ok(new { token });
             }
             return Ok("UserName or password are wrong");
+        }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetUserDetail()
+        {
+            var usrId = User.Claims.First(x => x.Type == "UserId").Value;
+            var user = await _userManager.FindByIdAsync(usrId);
+            return Ok(new { user });
         }
     }
 }
