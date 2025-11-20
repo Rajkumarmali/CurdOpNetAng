@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/n1zX/VI/xw=",
+  "dgSpecHash": "XhUtGI3GJNU=",
   "success": true,
-  "projectFilePath": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj",
+  "projectFilePath": "/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/CURD.csproj",
   "expectedPackageFiles": [
     "/Users/rajkumarmali/.nuget/packages/azure.core/1.35.0/azure.core.1.35.0.nupkg.sha512",
     "/Users/rajkumarmali/.nuget/packages/azure.identity/1.10.3/azure.identity.1.10.3.nupkg.sha512",

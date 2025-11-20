@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj": {}
+    "/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/CURD.csproj": {}
   },
   "projects": {
-    "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj": {
+    "/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/CURD.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj",
+        "projectUniqueName": "/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/CURD.csproj",
         "projectName": "CURD",
-        "projectPath": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/CURD.csproj",
+        "projectPath": "/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/CURD.csproj",
         "packagesPath": "/Users/rajkumarmali/.nuget/packages/",
-        "outputPath": "/Users/rajkumarmali/DOTNETANGULAR/CurdOpNetAng/DotNet/CURD/obj/",
+        "outputPath": "/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/rajkumarmali/.nuget/NuGet/NuGet.Config"
