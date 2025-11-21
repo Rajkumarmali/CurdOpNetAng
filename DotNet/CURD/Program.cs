@@ -9,6 +9,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using CURD.Extension;
+using CURD.DAL.StudentDAL;
 
 
 
@@ -51,6 +52,8 @@ builder.Services.AddSwaggerGen(options =>                                 |
 
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<IStudent, StudentRepo>();
+builder.Services.AddScoped<StudentService>();
 
 builder.Services.AddIdentityHandlersAndStore();//    <------------------
 /*                                                                     |
