@@ -1,3 +1,4 @@
+
 using CURD.DAL.StudentDAL;
 using CURD.Data;
 using CURD.DTO;
@@ -14,10 +15,12 @@ namespace CURD.Controller
         private readonly AppDbContext _context;
         private readonly StudentService _services;
 
+
         public StudentController(AppDbContext context, StudentService service)
         {
             _context = context;
             _services = service;
+
         }
 
         [HttpPost]
@@ -114,7 +117,5 @@ namespace CURD.Controller
         //     _context.SaveChanges();
         //     return Ok(new { message = "Student deleted successfully" });
         // }
-
-
     }
 }

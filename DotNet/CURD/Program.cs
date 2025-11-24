@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
 using CURD.Extension;
 using CURD.DAL.StudentDAL;
+using CURD.DAL.EmailDAL;
+
+
 
 
 
@@ -55,13 +58,15 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IStudent, StudentRepo>();
 builder.Services.AddScoped<StudentService>();
 
+builder.Services.AddScoped<IEmailSender, EmailSenderRepo>();
+builder.Services.AddScoped<EmailServices>();
+
+
 builder.Services.AddIdentityHandlersAndStore();//    <------------------
 /*                                                                     |
 builder.Services.AddIdentityApiEndpoints<AppUser>()                    |
                  .AddEntityFrameworkStores<AppDbContext>();            |
 */    //                                                               |
-
-
 
 builder.Services.InjectDbContext(builder.Configuration); // <---------------------------
 /*                                                                                      |

@@ -1,3 +1,4 @@
+using CURD.DAL.EmailDAL;
 using CURD.Data;
 using CURD.DTO;
 using CURD.Model;
@@ -9,9 +10,11 @@ namespace CURD.DAL.StudentDAL
     public class StudentRepo : IStudent
     {
         private readonly AppDbContext _context;
-        public StudentRepo(AppDbContext context)
+        private readonly EmailServices _emailServices;
+        public StudentRepo(AppDbContext context, EmailServices emailServices)
         {
             _context = context;
+            _emailServices = emailServices;
         }
         public void AddStudent(AddStudentDto dto, string userId)
         {
@@ -23,6 +26,18 @@ namespace CURD.DAL.StudentDAL
                 Address = dto.Address,
                 UserId = userId
             };
+
+            string body =
+                 "=====================================\n" +
+                 "        📘 New Student Added         \n" +
+                 "=====================================\n\n" +
+                 $"Full Name : {student.FullName}\n" +
+                 $"Email     : {student.Email}\n" +
+                 $"Phone     : {student.Phone}\n" +
+                 $"Address   : {student.Address}\n\n" +
+                 "-------------------------------------\n" +
+                 "This is an automated notification.\n";
+            _emailServices.SendEmailAsync("Add a new Student", body);
             _context.Students.Add(student);
             _context.SaveChanges();
         }
@@ -47,6 +62,8 @@ namespace CURD.DAL.StudentDAL
         public void DeleteStudent(int id)
         {
             var student = _context.Students.FirstOrDefault(x => x.Id == id);
+            string body = $"A student is deleted. Student ID: {student.Id} , FullName : {student.FullName}";
+            _emailServices.SendEmailAsync("Delete a student", body);
             _context.Students.Remove(student);
             _context.SaveChanges();
         }
