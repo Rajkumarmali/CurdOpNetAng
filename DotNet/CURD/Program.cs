@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using CURD.Extension;
 using CURD.DAL.StudentDAL;
 using CURD.DAL.EmailDAL;
+using CURD.DAL.SmsDAL;
 
 
 
@@ -60,6 +61,9 @@ builder.Services.AddScoped<StudentService>();
 
 builder.Services.AddScoped<IEmailSender, EmailSenderRepo>();
 builder.Services.AddScoped<EmailServices>();
+
+builder.Services.AddScoped<ISms, SmsRepo>();
+builder.Services.AddScoped<SmsServices>();
 
 
 builder.Services.AddIdentityHandlersAndStore();//    <------------------

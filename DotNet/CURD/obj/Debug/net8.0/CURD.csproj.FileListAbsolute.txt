@@ -383,3 +383,6 @@
 /Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/obj/Debug/net8.0/CURD.pdb
 /Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/obj/Debug/net8.0/CURD.genruntimeconfig.cache
 /Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/obj/Debug/net8.0/ref/CURD.dll
+/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/bin/Debug/net8.0/Microsoft.Bcl.Memory.dll
+/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/bin/Debug/net8.0/Newtonsoft.Json.dll
+/Users/rajkumarmali/CURD/CurdOpNetAng/DotNet/CURD/bin/Debug/net8.0/Twilio.dll

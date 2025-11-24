@@ -1,4 +1,5 @@
 using CURD.DAL.EmailDAL;
+using CURD.DAL.SmsDAL;
 using CURD.Data;
 using CURD.DTO;
 using CURD.Model;
@@ -11,10 +12,12 @@ namespace CURD.DAL.StudentDAL
     {
         private readonly AppDbContext _context;
         private readonly EmailServices _emailServices;
-        public StudentRepo(AppDbContext context, EmailServices emailServices)
+        private readonly SmsServices _smsServices;
+        public StudentRepo(AppDbContext context, EmailServices emailServices, SmsServices smsServices)
         {
             _context = context;
             _emailServices = emailServices;
+            _smsServices = smsServices;
         }
         public void AddStudent(AddStudentDto dto, string userId)
         {
@@ -38,6 +41,7 @@ namespace CURD.DAL.StudentDAL
                  "-------------------------------------\n" +
                  "This is an automated notification.\n";
             _emailServices.SendEmailAsync("Add a new Student", body);
+            _smsServices.SendSms("7372907537", "Hii");
             _context.Students.Add(student);
             _context.SaveChanges();
         }
