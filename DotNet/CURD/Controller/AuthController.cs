@@ -71,5 +71,24 @@ namespace CURD.Controller
             var user = await _userManager.FindByIdAsync(usrId);
             return Ok(new { user });
         }
+
+        [HttpPost("resetPassword")]
+        [Authorize]
+        public async Task<IActionResult> UpdatePassword([FromBody] ResetPasswordDto dto)
+        {
+            var userId = User.Claims.First(x => x.Type == "UserId").Value;
+            var user = await _userManager.FindByIdAsync(userId);
+            var checkPass = await _userManager.CheckPasswordAsync(user, dto.OldPass);
+            if (!checkPass)
+            {
+                return Ok(new { message = "Old password are wrong" });
+            }
+            var result = await _userManager.ChangePasswordAsync(user, dto.OldPass, dto.NewPass);
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "Password updated successfully" });
+            }
+            return Ok("Password are not change");
+        }
     }
 }
