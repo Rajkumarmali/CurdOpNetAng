@@ -34,6 +34,13 @@ export class Auth {
         // return this.http.get("http://localhost:5050/api/Auth",{headers})
         return this.http.get("http://localhost:5050/api/Auth")
    }
+   updatePassword(pass:any){
+        const password = {
+          oldPass : pass.oldPassword,
+          newPass :pass.newPassword
+        };
+        return this.http.post("http://localhost:5050/api/Auth/resetPassword",password);
+   }
    isLogin(){
        return localStorage.getItem('token') != null? true:false;
    }

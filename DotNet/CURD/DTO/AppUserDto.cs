@@ -12,4 +12,9 @@ namespace CURD.DTO
         public string Email { get; set; }
         public string Password { get; set; }
     }
+    public class ResetPasswordDto
+    {
+        public string OldPass { get; set; }
+        public string NewPass { get; set; }
+    }
 }
