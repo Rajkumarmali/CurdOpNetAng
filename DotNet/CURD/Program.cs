@@ -8,6 +8,12 @@ using System.Text;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using CURD.Extension;
+using CURD.DAL.StudentDAL;
+using CURD.DAL.EmailDAL;
+using CURD.DAL.SmsDAL;
+
+
 
 
 
@@ -15,73 +21,106 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Type = SecuritySchemeType.Http,
-        Scheme = "Bearer",
-        In = ParameterLocation.Header,
-        Description = "Fill in the JWT Token"
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-          new List<string>()
-        }
-    });
-});
+
+builder.Services.AddSwaggerExplorer(); // <-------------------------------
+/*                                                                        |
+builder.Services.AddEndpointsApiExplorer();                               |
+                                                                          |
+                                                                          |
+builder.Services.AddSwaggerGen(options =>                                 |
+{                                                                         |
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme     |
+    {                                                                     |
+        Name = "Authorization",                                           |
+        Type = SecuritySchemeType.Http,                                   |
+        Scheme = "Bearer",                                                |
+        In = ParameterLocation.Header,                                    |
+        Description = "Fill in the JWT Token"                             |
+    });                                                                   |
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement         |         
+    {                                                                     |
+        {                                                                 |
+            new OpenApiSecurityScheme                                     |
+            {                                                             |
+                Reference = new OpenApiReference                          |
+                {                                                         |
+                    Type = ReferenceType.SecurityScheme,                  |
+                    Id = "Bearer"                                         |
+                }                                                         |
+            },                                                            |
+          new List<string>()                                              |
+        }                                                                 |
+    });                                                                   |
+});                                                                       |
+*/
+
 builder.Services.AddControllers();
 
-builder.Services.AddIdentityApiEndpoints<AppUser>()
-                .AddEntityFrameworkStores<AppDbContext>();
+builder.Services.AddScoped<IStudent, StudentRepo>();
+builder.Services.AddScoped<StudentService>();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<AppDbContext>(options =>
-   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddScoped<IEmailSender, EmailSenderRepo>();
+builder.Services.AddScoped<EmailServices>();
 
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-});
+builder.Services.AddScoped<ISms, SmsRepo>();
+builder.Services.AddScoped<SmsServices>();
 
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme =
-    x.DefaultChallengeScheme =
-    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(y =>
-{
-    y.SaveToken = false;
-    y.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:JwtSecret"])),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-    };
-});
 
-builder.Services.AddAuthorization(options =>
-{
-    options.FallbackPolicy = new AuthorizationPolicyBuilder()
-    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-    .RequireAuthenticatedUser()
-    .Build();
-});
+builder.Services.AddIdentityHandlersAndStore();//    <------------------
+/*                                                                     |
+builder.Services.AddIdentityApiEndpoints<AppUser>()                    |
+                 .AddEntityFrameworkStores<AppDbContext>();            |
+*/    //                                                               |
+
+builder.Services.InjectDbContext(builder.Configuration); // <---------------------------
+/*                                                                                      |
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");  |
+builder.Services.AddDbContext<AppDbContext>(options =>                                  |
+   options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));     |
+*/  //                                                                                  | 
+
+
+builder.Services.ConfiIdentityOptioin();         // <----------------
+/*                                                                   |
+builder.Services.Configure<IdentityOptions>(options =>               |
+{                                                                    |
+    options.Password.RequireDigit = false;                           |
+    options.Password.RequireUppercase = false;                       |
+    options.Password.RequireLowercase = false;                       |
+    options.Password.RequireNonAlphanumeric = false;                 |
+});                                                                  |
+*/  //                                                               |
+
+
+
+builder.Services.AddIdentityAuth(builder.Configuration); // <----------------------------------------------------------------------
+/*                                                                                                                                 | 
+builder.Services.AddAuthentication(x =>                                                                                            |
+{                                                                                                                                  |
+    x.DefaultAuthenticateScheme =                                                                                                  |
+    x.DefaultChallengeScheme =                                                                                                     |
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;                                                                      |
+}).AddJwtBearer(y =>                                                                                                               |
+{                                                                                                                                  |
+    y.SaveToken = false;                                                                                                           |
+    y.TokenValidationParameters = new TokenValidationParameters                                                                    |
+    {                                                                                                                              |
+        ValidateIssuerSigningKey = true,                                                                                           |
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:JwtSecret"])),       |
+        ValidateIssuer = false,                                                                                                    |
+        ValidateAudience = false,                                                                                                  |
+    };                                                                                                                             |
+});                                                                                                                                |
+  //                                                                                                                               |
+                                                                                                                                   | 
+builder.Services.AddAuthorization(options =>                                                                                       |
+{                                                                                                                                  |
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()                                                                      |
+    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)                                                              |
+    .RequireAuthenticatedUser()                                                                                                    |
+    .Build();                                                                                                                      |
+});                                                                                                                                |
+*/   //                                                                                                                            |
 
 
 
@@ -90,24 +129,33 @@ var app = builder.Build();
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.ConfiSwaggerExplorer();    // <-------
+/*                                        |
+if (app.Environment.IsDevelopment())      |
+{                                         |
+    app.UseSwagger();                     |
+    app.UseSwaggerUI();                   |
+}                                         |
+*/         //                             |
 
 app.UseHttpsRedirection();
 
-app.UseCors(options =>
-{
-    options.WithOrigins("http://localhost:4200")
-    .AllowAnyMethod()
-    .AllowAnyHeader();
-});
+app.ConfigureCORS();    // <------------------------
+/*                                                  | 
+app.UseCors(options =>                              |
+{                                                   |
+    options.WithOrigins("http://localhost:4200").   |
+    .AllowAnyMethod()                               |  
+    .AllowAnyHeader();                              |
+});                                                 |
+*/                        //                        |
 
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.AddIdentityAuthMiddeleware();  // <-----
+/*                                          |
+app.UseAuthentication();                    |
+app.UseAuthorization();                     |
+*/                     //                   |
 
 app.MapGet("/", () =>
 {

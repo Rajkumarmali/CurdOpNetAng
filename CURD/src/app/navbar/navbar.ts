@@ -15,9 +15,9 @@ export class Navbar implements OnInit{
   isLogin:boolean=false;
 
   ngOnInit():void{
-     if(this.authServices.isLogin()) this.isLogin = true;
-     console.log(this.isLogin)
-
+     this.authServices.isLoggedIn$.subscribe(status=>{
+       this.isLogin = Boolean(status);
+     });
   }
   onSignin(){
        this.router.navigate(['']);
@@ -26,7 +26,7 @@ export class Navbar implements OnInit{
     this.router.navigate(['/login'])
   }
   onLogOut(){
-     localStorage.removeItem('token');
+     this.authServices.logOut();
      this.router.navigate([''])
   }
 }

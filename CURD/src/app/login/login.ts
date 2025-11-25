@@ -20,8 +20,8 @@ export class Login {
     onLogin(){
          this.authServices.logIn(this.user).subscribe({
           next:(res:any)=>{
+            this.authServices.setLogin(res.token);
             this.router.navigate(['dashboard'])
-            localStorage.setItem('token',res.token);
            // console.log(res)
           },error:(err)=>{
             console.log("Error",err);

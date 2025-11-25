@@ -22,7 +22,7 @@ export class Dashboard implements OnInit{
     phone:'',
     address:''
   }
-  
+
   addStudentDetail:any={
     fullName:'',
     email:'',
@@ -32,10 +32,14 @@ export class Dashboard implements OnInit{
 
 
   ngOnInit():void{
+     this.fetchStudent();
+  }
+
+  fetchStudent(){
       this.studentServices.listOfStudent().subscribe({
         next:(res:any)=>{
            this.studentData=res.students;
-          console.log(this.studentData);
+           console.log(this.studentData);
         },error:(err)=>{
           console.log(err);
         }
@@ -49,6 +53,7 @@ export class Dashboard implements OnInit{
   onAddStudent(){
        this.studentServices.addStudent(this.addStudentDetail).subscribe({
         next:(res:any)=>{
+          this.fetchStudent();
           console.log(res)
         },error:(err:any)=>{
           console.log(err);
@@ -71,6 +76,7 @@ export class Dashboard implements OnInit{
   saveUpdate(){
     this.studentServices.updateStudent(this.updateStudentData).subscribe({
       next:(res:any)=>{
+        this.fetchStudent();
         console.log(res)
       },error:(err:any)=>{
         console.log(err);
@@ -85,6 +91,7 @@ export class Dashboard implements OnInit{
   onDelete(id:any){
       this.studentServices.deleteStudent(id).subscribe({
         next:(res:any)=>{
+          this.fetchStudent();
           console.log(res);
         },error:(err)=>{
           console.log(err);
