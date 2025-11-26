@@ -79,7 +79,8 @@ namespace CURD.Controller
         [Authorize]
         public async Task<IActionResult> updateStudent([FromBody] UpdateStudentDto dto)
         {
-            var student = await _services.UpdateStudent(dto);
+            var userId = User.Claims.First(x => x.Type == "UserId").Value;
+            var student = await _services.UpdateStudent(dto, userId);
             return Ok(new { student });
         }
         // public async Task<IActionResult> upDateStudent([FromBody] UpdateStudentDto dto)
@@ -103,7 +104,8 @@ namespace CURD.Controller
         [Authorize]
         public async Task<IActionResult> deleteStudent(int id)
         {
-            _services.DeletStudent(id);
+            var userId = User.Claims.First(x => x.Type == "UserId").Value;
+            _services.DeletStudent(id, userId);
             return Ok(new { message = "Student deleted successfully" });
         }
         // public async Task<IActionResult> deleteStudent(int id)

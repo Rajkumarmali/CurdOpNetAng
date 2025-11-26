@@ -22,73 +22,105 @@ namespace CURD.Controller
             _userManager = userManager;
             _configuration = congiguration;
         }
-        [HttpPost]
+        [HttpPost("signin")]
         [AllowAnonymous]
         public async Task<IActionResult> SignIn([FromBody] UserRegisterDto dto)
         {
-            var user = new AppUser
+            try
             {
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Email = dto.Email,
-                UserName = dto.FirstName + "123"
-            };
-            var result = await _userManager.CreateAsync(user, dto.Password);
-            return Ok(new { result });
+                var user = new AppUser
+                {
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    Email = dto.Email,
+                    UserName = dto.FirstName + "123"
+                };
+                var result = await _userManager.CreateAsync(user, dto.Password);
+                return Ok(new { result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error " + ex);
+            }
         }
+
+
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] UserLoginDto dot)
         {
-            var user = await _userManager.FindByEmailAsync(email: dot.Email);
-            if (user != null && await _userManager.CheckPasswordAsync(user, dot.Password))
+            try
             {
-                var signinkey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:JwtSecret"]));
-                var tokenDescription = new SecurityTokenDescriptor
+                var user = await _userManager.FindByEmailAsync(email: dot.Email);
+                if (user != null && await _userManager.CheckPasswordAsync(user, dot.Password))
                 {
-                    Subject = new ClaimsIdentity(new Claim[]
-                  {
+                    var signinkey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:JwtSecret"]));
+                    var tokenDescription = new SecurityTokenDescriptor
+                    {
+                        Subject = new ClaimsIdentity(new Claim[]
+                      {
                       new Claim("UserId",user.Id.ToString()),
                       new Claim("Email",user.Email.ToString())
-                  }),
-                    Expires = DateTime.UtcNow.AddDays(1),
-                    SigningCredentials = new SigningCredentials(signinkey, SecurityAlgorithms.HmacSha256Signature)
-                };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var securityToken = tokenHandler.CreateToken(tokenDescription);
-                var token = tokenHandler.WriteToken(securityToken);
+                      }),
+                        Expires = DateTime.UtcNow.AddDays(1),
+                        SigningCredentials = new SigningCredentials(signinkey, SecurityAlgorithms.HmacSha256Signature)
+                    };
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var securityToken = tokenHandler.CreateToken(tokenDescription);
+                    var token = tokenHandler.WriteToken(securityToken);
 
-                return Ok(new { token });
+                    return Ok(new { token });
+                }
+                return Ok("UserName or password are wrong");
             }
-            return Ok("UserName or password are wrong");
+            catch (Exception ex)
+            {
+                return Ok("Error:" + ex);
+            }
+
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> GetUserDetail()
         {
-            var usrId = User.Claims.First(x => x.Type == "UserId").Value;
-            var user = await _userManager.FindByIdAsync(usrId);
-            return Ok(new { user });
+            try
+            {
+                var usrId = User.Claims.First(x => x.Type == "UserId").Value;
+                var user = await _userManager.FindByIdAsync(usrId);
+                return Ok(new { user });
+            }
+            catch (Exception ex)
+            {
+                return Ok("Error :" + ex);
+            }
+
         }
 
         [HttpPost("resetPassword")]
         [Authorize]
         public async Task<IActionResult> UpdatePassword([FromBody] ResetPasswordDto dto)
         {
-            var userId = User.Claims.First(x => x.Type == "UserId").Value;
-            var user = await _userManager.FindByIdAsync(userId);
-            var checkPass = await _userManager.CheckPasswordAsync(user, dto.OldPass);
-            if (!checkPass)
+            try
             {
-                return Ok(new { message = "Old password are wrong" });
+                var userId = User.Claims.First(x => x.Type == "UserId").Value;
+                var user = await _userManager.FindByIdAsync(userId);
+                var checkPass = await _userManager.CheckPasswordAsync(user, dto.OldPass);
+                if (!checkPass)
+                {
+                    return Ok(new { message = "Old password are wrong" });
+                }
+                var result = await _userManager.ChangePasswordAsync(user, dto.OldPass, dto.NewPass);
+                if (result.Succeeded)
+                {
+                    return Ok(new { message = "Password updated successfully" });
+                }
+                return Ok("Password are not change");
             }
-            var result = await _userManager.ChangePasswordAsync(user, dto.OldPass, dto.NewPass);
-            if (result.Succeeded)
+            catch (Exception ex)
             {
-                return Ok(new { message = "Password updated successfully" });
+                return Ok("Error:" + ex);
             }
-            return Ok("Password are not change");
         }
     }
 }
