@@ -20,13 +20,13 @@ namespace CURD.DAL.StudentDAL
             return _studentRepo.GetAllStudent(userId);
         }
 
-        public Task<Student> UpdateStudent(UpdateStudentDto dto)
+        public Task<Student> UpdateStudent(UpdateStudentDto dto, string userId)
         {
-            return _studentRepo.UpdateStudent(dto);
+            return _studentRepo.UpdateStudent(dto, userId);
         }
-        public void DeletStudent(int id)
+        public void DeletStudent(int id, string userId)
         {
-            _studentRepo.DeleteStudent(id);
+            _studentRepo.DeleteStudent(id, userId);
         }
     }
 }

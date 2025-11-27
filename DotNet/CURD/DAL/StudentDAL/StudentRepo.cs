@@ -21,55 +21,98 @@ namespace CURD.DAL.StudentDAL
         }
         public void AddStudent(AddStudentDto dto, string userId)
         {
-            var student = new Student
+            try
             {
-                FullName = dto.FullName,
-                Email = dto.Email,
-                Phone = dto.Phone,
-                Address = dto.Address,
-                UserId = userId
-            };
+                var student = new Student
+                {
+                    FullName = dto.FullName,
+                    Email = dto.Email,
+                    Phone = dto.Phone,
+                    Address = dto.Address,
+                    UserId = userId
+                };
 
-            string body =
-                 "=====================================\n" +
-                 "        📘 New Student Added         \n" +
-                 "=====================================\n\n" +
-                 $"Full Name : {student.FullName}\n" +
-                 $"Email     : {student.Email}\n" +
-                 $"Phone     : {student.Phone}\n" +
-                 $"Address   : {student.Address}\n\n" +
-                 "-------------------------------------\n" +
-                 "This is an automated notification.\n";
-            // _emailServices.SendEmailAsync("Add a new Student", body);
-            // _smsServices.SendSms("7372907537", "Hii");
-            _context.Students.Add(student);
-            _context.SaveChanges();
+                string body =
+                     "=====================================\n" +
+                     "        📘 New Student Added         \n" +
+                     "=====================================\n\n" +
+                     $"Full Name : {student.FullName}\n" +
+                     $"Email     : {student.Email}\n" +
+                     $"Phone     : {student.Phone}\n" +
+                     $"Address   : {student.Address}\n\n" +
+                     "-------------------------------------\n" +
+                     "This is an automated notification.\n";
+
+                // _emailServices.SendEmailAsync("Add a new Student", body);
+                // _smsServices.SendSms("7372907537", "Hii");
+
+                _context.Students.Add(student);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while adding student: " + ex.Message);
+            }
         }
 
         public async Task<List<Student>> GetAllStudent(string userId)
         {
-            var students = await _context.Students.Where(x => x.UserId == userId).ToListAsync();
-            return students;
+            try
+            {
+                var students = await _context.Students.Where(x => x.UserId == userId).ToListAsync();
+                return students;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while get student :" + ex.Message);
+            }
+
+        }
+        public async Task<Student> UpdateStudent(UpdateStudentDto dto, string userId)
+        {
+            try
+            {
+                var student = await _context.Students.FirstOrDefaultAsync(x => x.Id == dto.Id);
+                if (student.UserId != userId)
+                {
+                    throw new Exception("You are not authorized to update this student");
+                }
+                student.FullName = dto.FullName;
+                student.Email = dto.Email;
+                student.Phone = dto.Phone;
+                student.Address = dto.Address;
+                _context.SaveChanges();
+                return student;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while update student : " + ex.Message);
+            }
         }
 
-        public async Task<Student> UpdateStudent(UpdateStudentDto dto)
+        public void DeleteStudent(int id, string userId)
         {
-            var student = await _context.Students.FirstOrDefaultAsync(x => x.Id == dto.Id);
-            student.FullName = dto.FullName;
-            student.Email = dto.Email;
-            student.Phone = dto.Phone;
-            student.Address = dto.Address;
-            _context.SaveChanges();
-            return student;
+            try
+            {
+                var student = _context.Students.FirstOrDefault(x => x.Id == id);
+                if (student == null)
+                    throw new Exception("Student not found with this ID");
+
+                if (student.UserId != userId)
+                    throw new Exception("You are not authorized to delete this student");
+
+                string body = $"A student was deleted.\nStudent ID: {student.Id}\nFull Name: {student.FullName}";
+
+                // _emailServices.SendEmailAsync("Delete a student", body);
+
+                _context.Students.Remove(student);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error while deleting student: " + ex.Message);
+            }
         }
 
-        public void DeleteStudent(int id)
-        {
-            var student = _context.Students.FirstOrDefault(x => x.Id == id);
-            string body = $"A student is deleted. Student ID: {student.Id} , FullName : {student.FullName}";
-            // _emailServices.SendEmailAsync("Delete a student", body);
-            _context.Students.Remove(student);
-            _context.SaveChanges();
-        }
     }
 }

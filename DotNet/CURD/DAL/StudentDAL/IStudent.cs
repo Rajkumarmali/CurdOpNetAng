@@ -7,7 +7,7 @@ namespace CURD.DAL.StudentDAL
     {
         void AddStudent(AddStudentDto stu, string userId);
         Task<List<Student>> GetAllStudent(string userId);
-        Task<Student> UpdateStudent(UpdateStudentDto dto);
-        void DeleteStudent(int id);
+        Task<Student> UpdateStudent(UpdateStudentDto dto, string userId);
+        void DeleteStudent(int id, string userId);
     }
 }

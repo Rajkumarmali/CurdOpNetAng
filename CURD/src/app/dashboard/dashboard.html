@@ -2,7 +2,8 @@
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold text-primary mb-0">Student Management</h3>
-    <button class="btn btn-success px-4 py-2 fw-semibold" (click)="addStudent()">
+    <button class="btn btn-success px-4 py-2 fw-semibold"
+      (click)="addStudent()">
       + Add New Student
     </button>
   </div>
@@ -29,34 +30,38 @@
 
             <td *ngIf="s.id!==updateId">{{ s.fullName }}</td>
             <td *ngIf="s.id===updateId">
-              <input [(ngModel)]="updateStudentData.fullName"  class="form-control" />
+              <input [(ngModel)]="updateStudentData.fullName"
+                class="form-control" />
             </td>
 
             <td *ngIf="s.id!==updateId">{{ s.email }}</td>
             <td *ngIf="s.id===updateId">
-              <input [(ngModel)]="updateStudentData.email" class="form-control" />
+              <input [(ngModel)]="updateStudentData.email"
+                class="form-control" />
             </td>
 
             <td *ngIf="s.id!==updateId">{{ s.phone }}</td>
-             <td *ngIf="s.id===updateId">
-              <input [(ngModel)]="updateStudentData.phone"  class="form-control" />
+            <td *ngIf="s.id===updateId">
+              <input [(ngModel)]="updateStudentData.phone"
+                class="form-control" />
             </td>
 
             <td *ngIf="s.id!==updateId">{{ s.address }}</td>
             <td *ngIf="s.id===updateId">
-              <input [(ngModel)]="updateStudentData.address" class="form-control" />
+              <input [(ngModel)]="updateStudentData.address"
+                class="form-control" />
             </td>
 
             <td>
               <ng-container *ngIf="s.id!==updateId; else saveCancel">
-                 <button (click)="onUpdate(s.id)">Update</button>
-                 <button (click)="onDelete(s.id)">Delete</button>
+                <button (click)="onUpdate(s.id)">Update</button>
+                <button (click)="onDelete(s.id)">Delete</button>
               </ng-container>
               <ng-template #saveCancel>
-                   <button (click)="saveUpdate()">Save</button>
-                   <button (click)="canelEdit()">Cancel</button>
+                <button (click)="saveUpdate()">Save</button>
+                <button (click)="canelEdit()">Cancel</button>
               </ng-template>
-            </td>  
+            </td>
           </tr>
         </tbody>
       </table>
@@ -67,8 +72,7 @@
   <div
     class="overlay"
     *ngIf="addStudentModel"
-    (click)="addStudentModel = false"
-  ></div>
+    (click)="addStudentModel = false"></div>
 
   <div class="popup-form card shadow-lg border-0" *ngIf="addStudentModel">
     <div class="card-body">
@@ -84,8 +88,7 @@
               placeholder="Enter full name"
               [(ngModel)]="addStudentDetail.fullName"
               name="fullName"
-              required
-            />
+              required />
           </div>
 
           <div class="col-md-6">
@@ -96,8 +99,7 @@
               placeholder="Enter email"
               [(ngModel)]="addStudentDetail.email"
               name="email"
-              required
-            />
+              required />
           </div>
 
           <div class="col-md-6">
@@ -108,8 +110,7 @@
               placeholder="Enter phone number"
               [(ngModel)]="addStudentDetail.phone"
               name="phone"
-              required
-            />
+              required />
           </div>
 
           <div class="col-md-6">
@@ -120,8 +121,7 @@
               placeholder="Enter address"
               [(ngModel)]="addStudentDetail.address"
               name="address"
-              required
-            />
+              required />
           </div>
         </div>
 
@@ -129,8 +129,7 @@
           <button
             type="button"
             class="btn btn-outline-secondary px-4 py-2 me-2 fw-semibold"
-            (click)="addStudentModel = false"
-          >
+            (click)="cancelAdd()">
             Cancel
           </button>
           <button type="submit" class="btn btn-primary px-5 py-2 fw-semibold">

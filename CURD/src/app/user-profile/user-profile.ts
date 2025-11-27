@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth } from '../shared/services/auth';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-user-profile',
@@ -13,7 +14,7 @@ export class UserProfile implements OnInit{
 
   resetPassModel:Boolean = false;
 
-  constructor(private authServices:Auth){}
+  constructor(private authServices:Auth,private toastr:ToastrService){}
 
   userDetail:any;
 
@@ -26,7 +27,9 @@ export class UserProfile implements OnInit{
     this.authServices.updatePassword(this.updatePassword).subscribe({
     next: (res: any) => {
       console.log(res);
-      alert(res.message);
+      if(!res.status)
+       this.toastr.error(res.message)
+      else this.toastr.success(res.message)
     },
     error: (err) => {
       console.log(err);
@@ -34,6 +37,10 @@ export class UserProfile implements OnInit{
     }
   })
    this.resetPassModel = false;
+   this.updatePassword={
+     oldPassword:'',
+    newPassword:''
+   }
 };
 
   ngOnInit():void{

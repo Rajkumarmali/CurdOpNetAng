@@ -12,7 +12,7 @@ export class Auth {
    constructor(private http:HttpClient){}
 
    signIn(user:any){
-      return this.http.post("http://localhost:5050/api/Auth",user);
+      return this.http.post("http://localhost:5050/api/Auth/signin",user);
    }
 
    logIn(user:any){

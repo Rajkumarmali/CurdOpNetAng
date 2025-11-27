@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Student } from '../shared/services/student';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,7 +11,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit{
-  constructor(private studentServices:Student){}
+  constructor(private studentServices:Student,private toastr:ToastrService){}
   studentData:any;
   addStudentModel:boolean = false;
   updateId:number | null=null
@@ -35,6 +36,15 @@ export class Dashboard implements OnInit{
      this.fetchStudent();
   }
 
+  clearData(){
+     this.addStudentDetail={
+      fullName:'',
+      email:'',
+      phone:'',
+      address:''
+     }
+  }
+
   fetchStudent(){
       this.studentServices.listOfStudent().subscribe({
         next:(res:any)=>{
@@ -53,13 +63,21 @@ export class Dashboard implements OnInit{
   onAddStudent(){
        this.studentServices.addStudent(this.addStudentDetail).subscribe({
         next:(res:any)=>{
+          this.toastr.success("Student added successfully");
           this.fetchStudent();
+          this.clearData();
           console.log(res)
         },error:(err:any)=>{
+          this.toastr.error("Something went wrong while adding");
           console.log(err);
         }
        })
        this.addStudentModel = false
+  }
+
+  cancelAdd(){
+      this.addStudentModel = false;
+      this.clearData();
   }
   onUpdate(id:any){
      this.updateId=id;
@@ -76,9 +94,11 @@ export class Dashboard implements OnInit{
   saveUpdate(){
     this.studentServices.updateStudent(this.updateStudentData).subscribe({
       next:(res:any)=>{
+        this.toastr.success("Student updated successfully");
         this.fetchStudent();
         console.log(res)
       },error:(err:any)=>{
+        this.toastr.error("Something went wrong while updating");
         console.log(err);
       }
     })
@@ -91,9 +111,11 @@ export class Dashboard implements OnInit{
   onDelete(id:any){
       this.studentServices.deleteStudent(id).subscribe({
         next:(res:any)=>{
+           this.toastr.success("Student deleted successfully");
           this.fetchStudent();
           console.log(res);
         },error:(err)=>{
+          this.toastr.error("Something went wrong while deleting");
           console.log(err);
         }
       })
